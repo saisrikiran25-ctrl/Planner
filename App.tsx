@@ -82,9 +82,13 @@ const App: React.FC = () => {
     setShowApiKeyManager(true);
   };
 
+  const handleCloseApiKeyManager = () => {
+    setShowApiKeyManager(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
-      {(!hasApiKey || showApiKeyManager) && <ApiKeyManager onKeySet={handleApiKeySet} />}
+      {(!hasApiKey || showApiKeyManager) && <ApiKeyManager onKeySet={handleApiKeySet} onClose={handleCloseApiKeyManager} hasApiKey={hasApiKey} />}
       <Header onShowApiKeyManager={handleShowApiKeyManager} />
       <main className="container mx-auto px-4 py-8 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">

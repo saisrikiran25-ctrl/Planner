@@ -2,20 +2,25 @@ import React, { useState, useEffect } from 'react';
 
 interface ApiKeyManagerProps {
   onKeySet: (key: string) => void;
+  onClose?: () => void;
+  hasApiKey?: boolean;
 }
 
-const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ onKeySet }) => {
+const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ onKeySet, onClose, hasApiKey }) => {
   const [apiKey, setApiKey] = useState<string>('');
   const [showInstructions, setShowInstructions] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
     // Check if API key already exists in localStorage
-    const storedKey = localStorage.getItem('GOOGLE_AI_API_KEY');
-    if (storedKey) {
-      onKeySet(storedKey);
+    // Only call onKeySet if the parent doesn't already know about it
+    if (!hasApiKey) {
+      const storedKey = localStorage.getItem('GOOGLE_AI_API_KEY');
+      if (storedKey) {
+        onKeySet(storedKey);
+      }
     }
-  }, [onKeySet]);
+  }, [onKeySet, hasApiKey]);
 
   const handleSaveKey = () => {
     if (!apiKey.trim()) {
@@ -67,6 +72,14 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ onKeySet }) => {
             >
               Clear API Key
             </button>
+            {onClose && (
+              <button
+                onClick={onClose}
+                className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                Close
+              </button>
+            )}
           </div>
         ) : (
           <div className="space-y-4">
