@@ -1,7 +1,11 @@
 
 import React from 'react';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onShowApiKeyManager?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onShowApiKeyManager }) => {
   return (
     <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg sticky top-0 z-10 border-b border-gray-200 dark:border-gray-700">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -14,6 +18,18 @@ const Header: React.FC = () => {
                 <span className="text-gray-900 dark:text-white"> Schedule Planner</span>
             </h1>
         </div>
+        {onShowApiKeyManager && (
+          <button
+            onClick={onShowApiKeyManager}
+            className="flex items-center space-x-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            title="Manage API Key"
+          >
+            <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+            </svg>
+            <span className="hidden sm:inline text-sm font-medium">API Key</span>
+          </button>
+        )}
       </div>
     </header>
   );

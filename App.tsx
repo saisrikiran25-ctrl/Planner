@@ -7,8 +7,13 @@ import InputForm from './components/InputForm';
 import ScheduleDisplay from './components/ScheduleDisplay';
 import Loader from './components/Loader';
 import Footer from './components/Footer';
+import ApiKeyManager from './components/ApiKeyManager';
 
 const App: React.FC = () => {
+  const [hasApiKey, setHasApiKey] = useState<boolean>(
+    () => !!localStorage.getItem('GOOGLE_AI_API_KEY')
+  );
+  const [showApiKeyManager, setShowApiKeyManager] = useState<boolean>(false);
   const [courses, setCourses] = useState<Course[]>([
     { id: 1, name: 'Mathematics', classesPerWeek: 5 },
     { id: 2, name: 'Science', classesPerWeek: 4 },
@@ -68,9 +73,19 @@ const App: React.FC = () => {
     });
   };
 
+  const handleApiKeySet = (key: string) => {
+    setHasApiKey(!!key);
+    setShowApiKeyManager(false);
+  };
+
+  const handleShowApiKeyManager = () => {
+    setShowApiKeyManager(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
-      <Header />
+      {(!hasApiKey || showApiKeyManager) && <ApiKeyManager onKeySet={handleApiKeySet} />}
+      <Header onShowApiKeyManager={handleShowApiKeyManager} />
       <main className="container mx-auto px-4 py-8 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           <div className="lg:col-span-4">

@@ -2,13 +2,20 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Course, Settings, ScheduleData } from '../types';
 
-const API_KEY = process.env.API_KEY;
+// Get API key from localStorage (set by user at runtime)
+const getApiKey = (): string => {
+  const apiKey = localStorage.getItem('GOOGLE_AI_API_KEY');
+  if (!apiKey) {
+    throw new Error("API key not found. Please configure your Google AI API key.");
+  }
+  return apiKey;
+};
 
-if (!API_KEY) {
-  throw new Error("API_KEY environment variable is not set.");
-}
-
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+// Initialize AI client with API key from localStorage
+const getAIClient = () => {
+  const apiKey = getApiKey();
+  return new GoogleGenAI({ apiKey });
+};
 
 function getScheduleSchema(workingDays: string[]) {
   const dayProperties: { [key: string]: object } = {};
@@ -106,6 +113,7 @@ export const generateSchedule = async (
   const dynamicScheduleSchema = getScheduleSchema(workingDays);
 
   try {
+    const ai = getAIClient(); // Get fresh client with current API key
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: prompt,
