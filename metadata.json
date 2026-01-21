@@ -1,0 +1,5 @@
+{
+  "name": "Academic Schedule Planner",
+  "description": "An AI-powered web application for schools and colleges to generate optimized weekly class schedules based on courses, teacher availability, and other constraints.",
+  "requestFramePermissions": []
+}
