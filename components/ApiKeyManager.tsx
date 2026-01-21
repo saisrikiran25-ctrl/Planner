@@ -23,9 +23,9 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ onKeySet }) => {
       return;
     }
 
-    // Basic validation - Google AI API keys typically start with "AI"
-    if (!apiKey.startsWith('AI')) {
-      setError('Invalid API key format. Google AI API keys typically start with "AI"');
+    // Basic validation - ensure it's not empty and has reasonable length
+    if (apiKey.trim().length < 20) {
+      setError('API key appears to be too short. Please check and try again.');
       return;
     }
 
@@ -38,7 +38,8 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ onKeySet }) => {
   const handleClearKey = () => {
     localStorage.removeItem('GOOGLE_AI_API_KEY');
     setApiKey('');
-    onKeySet('');
+    // Force a page reload to clear any cached state
+    window.location.reload();
   };
 
   const storedKey = localStorage.getItem('GOOGLE_AI_API_KEY');

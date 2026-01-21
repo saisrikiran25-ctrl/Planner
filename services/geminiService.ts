@@ -3,18 +3,31 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Course, Settings, ScheduleData } from '../types';
 
 // Get API key from localStorage (set by user at runtime)
-const getApiKey = (): string => {
-  const apiKey = localStorage.getItem('GOOGLE_AI_API_KEY');
+const getApiKey = (): string | null => {
+  return localStorage.getItem('GOOGLE_AI_API_KEY');
+};
+
+// Cache for AI client to avoid recreating on every call
+let cachedClient: GoogleGenAI | null = null;
+let cachedApiKey: string | null = null;
+
+// Initialize AI client with API key from localStorage
+const getAIClient = (): GoogleGenAI => {
+  const apiKey = getApiKey();
+  
   if (!apiKey) {
     throw new Error("API key not found. Please configure your Google AI API key.");
   }
-  return apiKey;
-};
-
-// Initialize AI client with API key from localStorage
-const getAIClient = () => {
-  const apiKey = getApiKey();
-  return new GoogleGenAI({ apiKey });
+  
+  // Return cached client if API key hasn't changed
+  if (cachedClient && cachedApiKey === apiKey) {
+    return cachedClient;
+  }
+  
+  // Create new client and cache it
+  cachedClient = new GoogleGenAI({ apiKey });
+  cachedApiKey = apiKey;
+  return cachedClient;
 };
 
 function getScheduleSchema(workingDays: string[]) {
