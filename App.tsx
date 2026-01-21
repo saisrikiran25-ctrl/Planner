@@ -13,7 +13,9 @@ const App: React.FC = () => {
   const [hasApiKey, setHasApiKey] = useState<boolean>(
     () => !!localStorage.getItem('GOOGLE_AI_API_KEY')
   );
-  const [showApiKeyManager, setShowApiKeyManager] = useState<boolean>(false);
+  const [showApiKeyManager, setShowApiKeyManager] = useState<boolean>(
+    () => !localStorage.getItem('GOOGLE_AI_API_KEY')
+  );
   const [courses, setCourses] = useState<Course[]>([
     { id: 1, name: 'Mathematics', classesPerWeek: 5 },
     { id: 2, name: 'Science', classesPerWeek: 4 },
@@ -82,9 +84,13 @@ const App: React.FC = () => {
     setShowApiKeyManager(true);
   };
 
+  const handleCloseApiKeyManager = () => {
+    setShowApiKeyManager(false);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
-      {(!hasApiKey || showApiKeyManager) && <ApiKeyManager onKeySet={handleApiKeySet} />}
+      {showApiKeyManager && <ApiKeyManager onKeySet={handleApiKeySet} onClose={handleCloseApiKeyManager} />}
       <Header onShowApiKeyManager={handleShowApiKeyManager} />
       <main className="container mx-auto px-4 py-8 md:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
