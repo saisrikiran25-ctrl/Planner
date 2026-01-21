@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 
 interface ApiKeyManagerProps {
   onKeySet: (key: string) => void;
+  onClose?: () => void;
 }
 
-const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ onKeySet }) => {
+const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ onKeySet, onClose }) => {
   const [apiKey, setApiKey] = useState<string>('');
   const [showInstructions, setShowInstructions] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
@@ -46,7 +47,31 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ onKeySet }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full p-8 max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-2xl w-full p-8 pr-14 max-h-[90vh] overflow-y-auto relative">
+        {/* Close button */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+            aria-label="Close"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        )}
+        
         <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
           🔑 API Key Required
         </h2>
